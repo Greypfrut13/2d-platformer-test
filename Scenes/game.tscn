@@ -2,15 +2,19 @@
 
 [ext_resource type="PackedScene" uid="uid://cqbptvusfxmf5" path="res://Scenes/Player/player.tscn" id="1_ebmjs"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_qxrlw"]
-size = Vector2(308, 20)
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ebmjs"]
+size = Vector2(190, 20)
 
 [node name="Node2D" type="Node2D"]
 
 [node name="Player" parent="." instance=ExtResource("1_ebmjs")]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 24)
-shape = SubResource("RectangleShape2D_qxrlw")
+position = Vector2(0, -2)
 
 [node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(2.07, 2.07)
+
+[node name="floor" type="StaticBody2D" parent="."]
+position = Vector2(0, 23)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="floor"]
+shape = SubResource("RectangleShape2D_ebmjs")

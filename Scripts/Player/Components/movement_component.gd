@@ -6,6 +6,7 @@ class_name MovementComponent
 
 @export var parent: CharacterBody2D
 @export var animated_sprite: AnimatedSprite2D
+@export var attack_component: AttackComponent
 
 var gravity: float = ProjectSettings.get_setting("physics/2d/default_gravity")
 var is_facing_right: bool = true;
@@ -31,6 +32,9 @@ func jump() -> void:
 		animated_sprite.play("jump")
 
 func _update_animation(direction: float) -> void:
+	if attack_component and attack_component.is_attacking:
+		return
+	
 	if not parent.is_on_floor():
 		if animated_sprite.animation != "jump":
 			animated_sprite.play("jump")

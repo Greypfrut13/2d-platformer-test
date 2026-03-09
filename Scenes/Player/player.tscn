@@ -1,10 +1,13 @@
-[gd_scene load_steps=31 format=3 uid="uid://cqbptvusfxmf5"]
+[gd_scene load_steps=35 format=3 uid="uid://cqbptvusfxmf5"]
 
+[ext_resource type="Script" uid="uid://dbxvbao2s365s" path="res://Scenes/Player/player.gd" id="1_dd0ac"]
 [ext_resource type="Texture2D" uid="uid://dln4487y0ul17" path="res://Assets/Sprites/01-King Human/Attack (78x58).png" id="1_mtuoh"]
 [ext_resource type="Texture2D" uid="uid://cr0qmmt6tmyq1" path="res://Assets/Sprites/01-King Human/Idle (78x58).png" id="2_htcer"]
 [ext_resource type="Texture2D" uid="uid://5ohfvepph8tv" path="res://Assets/Sprites/01-King Human/Jump (78x58).png" id="3_dd0ac"]
 [ext_resource type="Texture2D" uid="uid://chwniyvjskc4j" path="res://Assets/Sprites/01-King Human/Run (78x58).png" id="4_0u5uq"]
 [ext_resource type="Script" uid="uid://dy04abdymrixo" path="res://Scripts/Player/Components/movement_component.gd" id="5_htcer"]
+[ext_resource type="Script" uid="uid://ors5x7buufhy" path="res://Scripts/Player/Components/health_component.gd" id="7_0u5uq"]
+[ext_resource type="Script" uid="uid://28lrlbfht87n" path="res://Scripts/Player/Components/attack_component.gd" id="8_jlvik"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jlvik"]
 size = Vector2(24, 24)
@@ -113,7 +116,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_74mp2")
 }],
-"loop": true,
+"loop": false,
 "name": &"attack",
 "speed": 5.0
 }, {
@@ -193,7 +196,14 @@ animations = [{
 "speed": 5.0
 }]
 
-[node name="Player" type="CharacterBody2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_gk6dx"]
+size = Vector2(32, 39)
+
+[node name="Player" type="CharacterBody2D" node_paths=PackedStringArray("movement", "health", "attack")]
+script = ExtResource("1_dd0ac")
+movement = NodePath("Components/movement_component")
+health = NodePath("Components/health_component")
+attack = NodePath("Components/attack_component")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-2, 2)
@@ -203,13 +213,30 @@ shape = SubResource("RectangleShape2D_jlvik")
 texture_filter = 1
 position = Vector2(6, 0)
 sprite_frames = SubResource("SpriteFrames_fcwna")
-animation = &"idle"
+animation = &"attack"
 autoplay = "idle"
-frame_progress = 0.75620055
+frame = 2
+frame_progress = 1.0
+
+[node name="AttackArea" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AttackArea"]
+position = Vector2(26, -5.5)
+shape = SubResource("RectangleShape2D_gk6dx")
 
 [node name="Components" type="Node" parent="."]
 
-[node name="movement_component" type="Node" parent="Components" node_paths=PackedStringArray("parent", "animated_sprite")]
+[node name="movement_component" type="Node" parent="Components" node_paths=PackedStringArray("parent", "animated_sprite", "attack_component")]
 script = ExtResource("5_htcer")
 parent = NodePath("../..")
 animated_sprite = NodePath("../../AnimatedSprite2D")
+attack_component = NodePath("../attack_component")
+
+[node name="health_component" type="Node" parent="Components"]
+script = ExtResource("7_0u5uq")
+
+[node name="attack_component" type="Node" parent="Components" node_paths=PackedStringArray("parent", "animated_sprite", "attack_area")]
+script = ExtResource("8_jlvik")
+parent = NodePath("../..")
+animated_sprite = NodePath("../../AnimatedSprite2D")
+attack_area = NodePath("../../AttackArea")
